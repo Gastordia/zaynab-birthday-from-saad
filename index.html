@@ -26,7 +26,7 @@
   <div id="heart-layer" aria-hidden="true"></div>
   <header class="site-header">
     <a href="#top" class="wordmark" aria-label="Back to the top"><span class="wordmark-heart">♡</span> for zaynab<span class="brand-dot">.</span></a>
-    <div class="header-right"><span class="header-date">22 looks lovely on you</span><button type="button" id="sound-toggle" class="sound-toggle" aria-pressed="false" title="Turn on gentle sound effects"><span class="sound-icon" aria-hidden="true">♪</span><span id="sound-label">sound off</span></button></div>
+    <div class="header-right"><span class="header-date">22 looks lovely on you</span><button type="button" id="sound-toggle" class="sound-toggle" aria-pressed="false" title="Play our song and turn on gentle sound effects"><span class="sound-icon" aria-hidden="true">♪</span><span id="sound-label">sound off</span></button></div>
   </header>
 
   <main id="top">
@@ -88,8 +88,9 @@
           <h2 id="song-title">And then there is<br><em>our song.</em></h2>
           <div class="song-track-info"><span class="song-note-icon" aria-hidden="true">♫</span><div><strong>Let Me Down Slowly</strong><span>Alec Benjamin</span></div></div>
           <p>Some songs remind you of a moment. This one reminds me of us, of five years of memories, all the little things, and the way a familiar melody can bring someone to mind.</p>
-          <div class="song-actions"><a class="btn btn-rose" href="https://music.apple.com/us/song/1551809345" target="_blank" rel="noopener noreferrer" aria-label="Listen to Let Me Down Slowly by Alec Benjamin in Apple Music">Listen on Apple Music <span aria-hidden="true">♫</span></a><a class="song-video-link" href="https://www.youtube.com/watch?v=50VNCymT-Cs" target="_blank" rel="noopener noreferrer">Official music video <span aria-hidden="true">↗</span></a></div>
-          <p class="song-hint">Tap to play. Apple Music or YouTube opens on your iPhone.</p>
+          <div class="song-player"><div id="song-player"></div></div>
+          <div class="song-actions"><button type="button" class="btn btn-rose" id="song-play" aria-pressed="false">Play our song <span aria-hidden="true">♫</span></button><a class="song-video-link" href="https://www.youtube.com/watch?v=50VNCymT-Cs" target="_blank" rel="noopener noreferrer">Open on YouTube <span aria-hidden="true">↗</span></a></div>
+          <p class="song-hint" id="song-status" role="status">Turn sound on to hear our song right here. You can also tap play above.</p>
         </div>
       </div>
     </section>

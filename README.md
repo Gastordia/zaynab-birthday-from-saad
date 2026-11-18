@@ -4,7 +4,7 @@ A personalized birthday site made with plain HTML, CSS, and JavaScript. It inclu
 
 ## Open it
 
-Open `index.html` directly in a browser. It doesn't need a server, account, or build process. Google Fonts are optional: the page falls back to local system fonts when offline. The site sends no birthday messages or personal photos to a backend; only the optional font request goes to Google Fonts.
+Open `index.html` directly in a browser. It doesn't need a server, account, or build process. Google Fonts are optional: the page falls back to local system fonts when offline. The site sends no birthday messages or personal photos to a backend; Google Fonts and the embedded YouTube player make requests to their respective providers.
 
 ## Change the message
 
@@ -29,7 +29,7 @@ Edit **`content.js`** to change the five chapter messages, three compliments, 22
 - Blow out three candles one by one or all at once.
 - Open the envelope to read a personal letter.
 - Unwrap the present for the final surprise.
-- Turn sound on for optional tiny synthesized chimes. No audio starts automatically.
+- Turn sound on to play "Let Me Down Slowly" inside the page, alongside gentle synthesized chimes. Turn sound off to pause. No audio starts automatically.
 
 Made originally for Zaynab's 22nd birthday, with care and without external JavaScript dependencies.
 
@@ -41,6 +41,6 @@ The page uses iPhone-safe viewport sizing and home-indicator/notch padding, mobi
 
 ## Our song
 
-The music section links to the original song on Apple Music and the official music video on YouTube. The song itself is not included or autoplayed. On iPhone, tap the Apple Music button to listen through Apple Music (subscription or preview as available), or open the YouTube music video. No external audio files are distributed with this website.
+The music section embeds the official YouTube video for "Let Me Down Slowly". The header sound toggle and the "Play our song" button both start or pause playback inside the page. Playback starts only after a visitor chooses it. The player is prepared silently on page load; if iPhone Safari blocks the initial playback request, the page asks the visitor to tap the visible video play control. An external YouTube link remains available if embedding is blocked or the video is unavailable. Music needs an internet connection and is provided by YouTube; no audio files are distributed with this website. Test through an HTTPS website URL because local file previews may block YouTube playback.
 
 Personal greeting and letter are signed from Saad. The page contains no em dashes.

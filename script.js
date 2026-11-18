@@ -5,7 +5,7 @@
   const content = window.ZAYNAB_STORY;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Optional, user-activated synthesized chimes. Nothing plays automatically.
+  // The song and gentle chimes start only after a visitor chooses sound on.
   let soundEnabled = false;
   let audioContext;
   const soundToggle = $('#sound-toggle');
@@ -22,15 +22,92 @@
       gain.gain.exponentialRampToValueAtTime(.0001, audioContext.currentTime + duration);
       osc.connect(gain); gain.connect(audioContext.destination);
       osc.start(); osc.stop(audioContext.currentTime + duration + .01);
-    } catch (_) { soundEnabled = false; $('#sound-label').textContent = 'sound off'; }
+    } catch (_) { audioContext = null; }
   }
-  soundToggle.addEventListener('click', () => {
-    soundEnabled = !soundEnabled;
-    soundToggle.setAttribute('aria-pressed', String(soundEnabled));
-    $('#sound-label').textContent = soundEnabled ? 'sound on' : 'sound off';
-    soundToggle.title = soundEnabled ? 'Turn off sound effects' : 'Turn on gentle sound effects';
-    chime(740);
-  });
+  const songButton = $('#song-play');
+  const songStatus = $('#song-status');
+  let songPlayer;
+  let songReady = false;
+  let songFailed = false;
+
+  function setSound(enabled) {
+    soundEnabled = enabled;
+    soundToggle.setAttribute('aria-pressed', String(enabled));
+    songButton.setAttribute('aria-pressed', String(enabled));
+    $('#sound-label').textContent = enabled ? 'sound on' : 'sound off';
+    soundToggle.title = enabled ? 'Pause our song and turn off sound effects' : 'Play our song and turn on gentle sound effects';
+    songButton.textContent = enabled ? 'Pause our song ♫' : 'Play our song ♫';
+  }
+
+  function startSong() {
+    if (!songReady) {
+      songStatus.textContent = songFailed
+        ? 'The song could not load. Try the YouTube link to listen.'
+        : 'Getting our song ready… It will start here when it is ready.';
+      return;
+    }
+    songStatus.textContent = 'Starting our song… If it stays quiet, tap play in the video above.';
+    songPlayer.unMute();
+    songPlayer.playVideo();
+  }
+
+  function toggleSound() {
+    setSound(!soundEnabled);
+    if (soundEnabled) {
+      startSong();
+      chime(740);
+    } else {
+      if (songReady) songPlayer.pauseVideo();
+      songStatus.textContent = 'Music paused. Turn sound on whenever you like.';
+    }
+  }
+  soundToggle.addEventListener('click', toggleSound);
+  songButton.addEventListener('click', toggleSound);
+
+  // Prepare the visible player silently so a later tap can start it immediately.
+  window.onYouTubeIframeAPIReady = () => {
+    const playerVars = { playsinline: 1, autoplay: 0, controls: 1, rel: 0, loop: 1, playlist: '50VNCymT-Cs' };
+    if (/^https?:$/.test(location.protocol)) playerVars.origin = location.origin;
+    songPlayer = new YT.Player('song-player', {
+      width: '100%', height: '100%', videoId: '50VNCymT-Cs', playerVars,
+      events: {
+        onReady(event) {
+          songPlayer = event.target;
+          songReady = true;
+          const frame = songPlayer.getIframe();
+          frame.title = 'Let Me Down Slowly by Alec Benjamin, official music video';
+          frame.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+          frame.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+          if (soundEnabled) startSong();
+        },
+        onStateChange(event) {
+          if (event.data === YT.PlayerState.PLAYING) {
+            setSound(true);
+            songStatus.textContent = 'Playing our song ♡ Turn sound off to pause.';
+          } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+            setSound(false);
+            songStatus.textContent = 'Music paused. Turn sound on whenever you like.';
+          }
+        },
+        onAutoplayBlocked() {
+          if (soundEnabled) songStatus.textContent = 'One more tap: press play in the video above to hear our song.';
+        },
+        onError() {
+          songFailed = true;
+          songReady = false;
+          songStatus.textContent = 'The song cannot play here right now. Try the YouTube link to listen.';
+        }
+      }
+    });
+  };
+  const songApi = document.createElement('script');
+  songApi.src = 'https://www.youtube.com/iframe_api';
+  songApi.async = true;
+  songApi.onerror = () => {
+    songFailed = true;
+    songStatus.textContent = 'The song could not load. Try the YouTube link to listen.';
+  };
+  document.head.append(songApi);
 
   // Story tabs: five chapters, each a genuinely different little message.
   const tabs = $('#chapter-tabs');
